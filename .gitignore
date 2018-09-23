@@ -1,0 +1,5 @@
+#ignore .projects
+
+.projects
+.DS_Store
+.vs
