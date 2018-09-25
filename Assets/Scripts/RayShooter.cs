@@ -3,6 +3,7 @@ using System.Collections;
 
 public class RayShooter : MonoBehaviour {
 	private Camera _camera;
+    private Material bullet;
 
 	void Start() {
 		_camera = GetComponent<Camera>();
@@ -33,7 +34,27 @@ public class RayShooter : MonoBehaviour {
 				}
 			}
 		}
-	}
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            Vector3 point = new Vector3(_camera.pixelWidth / 2, _camera.pixelHeight / 2, 0);
+            Ray ray = _camera.ScreenPointToRay(point);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                GameObject hitObject = hit.transform.gameObject;
+                ReactiveTarget target = hitObject.GetComponent<ReactiveTarget>();
+                if (target != null)
+                {
+                    target.ReactToHit();
+                }
+                else
+                {
+                    StartCoroutine(SphereIndicator(hit.point));
+                }
+            }
+        }
+    }
 
 	private IEnumerator SphereIndicator(Vector3 pos) {
 		GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
